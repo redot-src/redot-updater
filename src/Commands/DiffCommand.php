@@ -2,9 +2,7 @@
 
 namespace Redot\Updater\Commands;
 
-use Illuminate\Console\Command;
-
-class DiffCommand extends Command
+class DiffCommand extends BaseCommand
 {
     /**
      * The console command name.
@@ -14,7 +12,7 @@ class DiffCommand extends Command
     /**
      * The console command description.
      */
-    protected $description = 'Get the diff between the local codebase and the latest dashboard';
+    protected $description = 'Get the diff between the local codebase and the latest redot dashboard version';
 
     /**
      * Handle the command

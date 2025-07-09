@@ -2,9 +2,7 @@
 
 namespace Redot\Updater\Commands;
 
-use Illuminate\Console\Command;
-
-class LoginCommand extends Command
+class LoginCommand extends BaseCommand
 {
     /**
      * The console command name.
@@ -14,7 +12,7 @@ class LoginCommand extends Command
     /**
      * The console command description.
      */
-    protected $description = 'Login to Redot to grab the API key';
+    protected $description = 'Login to redot.dev to grab the API key';
 
     /**
      * Handle the command
