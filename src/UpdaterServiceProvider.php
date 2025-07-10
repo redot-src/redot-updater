@@ -4,7 +4,7 @@ namespace Redot\Updater;
 
 use Illuminate\Support\ServiceProvider;
 
-class RedotUpdaterServiceProvider extends ServiceProvider
+class UpdaterServiceProvider extends ServiceProvider
 {
     /**
      * Bootstrap the application services.

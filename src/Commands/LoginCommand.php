@@ -2,6 +2,14 @@
 
 namespace Redot\Updater\Commands;
 
+use Illuminate\Support\Facades\Http;
+
+use function Laravel\Prompts\error;
+use function Laravel\Prompts\info;
+use function Laravel\Prompts\password;
+use function Laravel\Prompts\select;
+use function Laravel\Prompts\text;
+
 class LoginCommand extends BaseCommand
 {
     /**
@@ -19,6 +27,43 @@ class LoginCommand extends BaseCommand
      */
     public function handle()
     {
-        // ...
+        $email = text('Enter your email address', required: true, placeholder: 'john@doe.com', validate: fn ($value) => filter_var($value, FILTER_VALIDATE_EMAIL) ? null : 'Invalid email address');
+        $password = password('Enter your password', required: true, placeholder: '********', validate: fn ($value) => strlen($value) >= 8 ? null : 'Password must be at least 8 characters long');
+
+        $response = Http::post('https://redot.dev/api/auth/login', [
+            'email' => $email,
+            'password' => $password,
+        ]);
+
+        if ($response->failed()) {
+            error($response->json('message'));
+
+            return;
+        }
+
+        $token = $response->json('payload.token');
+
+        info('Logged in successfully, fetching projects...');
+
+        $response = Http::withToken($token)->get('https://redot.dev/api/projects');
+
+        if ($response->failed()) {
+            error($response->json('message'));
+
+            return;
+        }
+
+        $projects = $response->json('payload');
+
+        if (count($projects) === 0) {
+            error('No projects found');
+
+            return;
+        }
+
+        $projects = collect($projects)->mapWithKeys(fn ($project) => [$project['slug'] => $project['name']])->toArray();
+        $project = select('Select a project', $projects, required: true);
+
+        dd(compact('token', 'project'));
     }
 }
