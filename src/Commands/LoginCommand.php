@@ -2,6 +2,7 @@
 
 namespace Redot\Updater\Commands;
 
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Http;
 
 use function Laravel\Prompts\error;
@@ -64,6 +65,9 @@ class LoginCommand extends BaseCommand
         $projects = collect($projects)->mapWithKeys(fn ($project) => [$project['slug'] => $project['name']])->toArray();
         $project = select('Select a project', $projects, required: true);
 
-        dd(compact('token', 'project'));
+        $this->token = $token;
+        $this->project = $project;
+
+        $this->saveCredentials();
     }
 }
