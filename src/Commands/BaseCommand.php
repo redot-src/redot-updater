@@ -3,7 +3,7 @@
 namespace Redot\Updater\Commands;
 
 use Illuminate\Console\Command;
-use Illuminate\Http\Testing\File;
+use Illuminate\Support\Facades\File;
 
 abstract class BaseCommand extends Command
 {

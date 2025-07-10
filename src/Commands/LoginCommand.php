@@ -2,7 +2,6 @@
 
 namespace Redot\Updater\Commands;
 
-use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Http;
 
 use function Laravel\Prompts\error;
