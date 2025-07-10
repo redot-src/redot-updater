@@ -32,7 +32,7 @@ abstract class BaseCommand extends Command
      */
     protected function loadCredentials()
     {
-        $file = base_path('.redot');
+        $file = base_path('.redot/credentials.json');
 
         if (! File::exists($file)) {
             return;
@@ -54,7 +54,8 @@ abstract class BaseCommand extends Command
             'project' => $this->project,
         ];
 
-        File::put(base_path('.redot'), json_encode($credentials, JSON_PRETTY_PRINT));
+        File::ensureDirectoryExists(base_path('.redot'));
+        File::put(base_path('.redot/credentials.json'), json_encode($credentials, JSON_PRETTY_PRINT));
 
         info('Credentials saved to .redot file');
     }
