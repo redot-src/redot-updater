@@ -27,6 +27,12 @@ class LoginCommand extends BaseCommand
      */
     public function handle()
     {
+        if ($this->hasCredentials()) {
+            error('You are already logged in');
+
+            return;
+        }
+
         $email = text('Enter your email address', required: true, placeholder: 'john@doe.com', validate: fn ($value) => filter_var($value, FILTER_VALIDATE_EMAIL) ? null : 'Invalid email address');
         $password = password('Enter your password', required: true, placeholder: '********', validate: fn ($value) => strlen($value) >= 8 ? null : 'Password must be at least 8 characters long');
 
@@ -68,5 +74,7 @@ class LoginCommand extends BaseCommand
         $this->project = $project;
 
         $this->saveCredentials();
+
+        info('Logged in successfully');
     }
 }

@@ -13,6 +13,7 @@ class UpdaterServiceProvider extends ServiceProvider
     {
         $this->commands([
             Commands\LoginCommand::class,
+            Commands\LogoutCommand::class,
             Commands\DiffCommand::class,
             Commands\UpdateCommand::class,
         ]);

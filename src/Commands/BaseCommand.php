@@ -56,8 +56,14 @@ abstract class BaseCommand extends Command
 
         File::ensureDirectoryExists(base_path('.redot'));
         File::put(base_path('.redot/credentials.json'), json_encode($credentials, JSON_PRETTY_PRINT));
+    }
 
-        info('Credentials saved to .redot file');
+    /**
+     * Remove the credentials from the Redot file.
+     */
+    protected function removeCredentials()
+    {
+        File::delete(base_path('.redot/credentials.json'));
     }
 
     /**
