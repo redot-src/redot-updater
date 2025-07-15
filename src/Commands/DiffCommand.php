@@ -2,6 +2,8 @@
 
 namespace Redot\Updater\Commands;
 
+use function Laravel\Prompts\info;
+
 class DiffCommand extends BaseCommand
 {
     /**
@@ -19,6 +21,7 @@ class DiffCommand extends BaseCommand
      */
     public function handle()
     {
-        // ...
+        info('Open the following URL to see the diff:');
+        info('https://redot.dev/projects/' . $this->project . '/diff');
     }
 }

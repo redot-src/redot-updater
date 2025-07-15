@@ -59,15 +59,15 @@ class LoginCommand extends BaseCommand
             return;
         }
 
-        $projects = $response->json('payload');
+        $projects = collect($response->json('payload'))->filter(fn ($project) => $project['is_active']);
 
-        if (count($projects) === 0) {
-            error('No projects found');
+        if ($projects->isEmpty()) {
+            error('No active projects found');
 
             return;
         }
 
-        $projects = collect($projects)->mapWithKeys(fn ($project) => [$project['slug'] => $project['name']])->toArray();
+        $projects = $projects->mapWithKeys(fn ($project) => [$project['slug'] => $project['name']])->toArray();
         $project = select('Select a project', $projects, required: true);
 
         $this->token = $token;
