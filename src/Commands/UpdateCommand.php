@@ -120,6 +120,9 @@ class UpdateCommand extends BaseCommand
             return;
         }
 
+        // Ensure directory exists
+        File::ensureDirectoryExists(dirname($destination));
+
         // Copy file to destination
         File::copy($source, $destination);
     }
