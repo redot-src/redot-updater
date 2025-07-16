@@ -30,7 +30,7 @@ class LogoutCommand extends BaseCommand
             return;
         }
 
-        $response = Http::withToken($this->token)->delete('https://redot.dev/api/auth/logout');
+        $response = Http::withToken($this->token)->delete("$this->endpoint/auth/logout");
 
         if ($response->failed()) {
             error($response->json('message'));

@@ -18,11 +18,23 @@ abstract class BaseCommand extends Command
     protected string $project = '';
 
     /**
+     * The base path for the updater configuration.
+     */
+    protected string $basePath;
+
+    /**
+     * The base endpoint for the Redot API.
+     */
+    protected string $endpoint = 'https://redot.dev/api';
+
+    /**
      * Create a new command instance.
      */
     public function __construct()
     {
         parent::__construct();
+
+        $this->basePath = base_path('.redot');
 
         $this->loadCredentials();
     }
@@ -32,7 +44,7 @@ abstract class BaseCommand extends Command
      */
     protected function loadCredentials()
     {
-        $file = base_path('.redot/credentials.json');
+        $file = $this->basePath . '/credentials.json';
 
         if (! File::exists($file)) {
             return;
@@ -54,8 +66,8 @@ abstract class BaseCommand extends Command
             'project' => $this->project,
         ];
 
-        File::ensureDirectoryExists(base_path('.redot'));
-        File::put(base_path('.redot/credentials.json'), json_encode($credentials, JSON_PRETTY_PRINT));
+        File::ensureDirectoryExists($this->basePath);
+        File::put($this->basePath . '/credentials.json', json_encode($credentials, JSON_PRETTY_PRINT));
     }
 
     /**
