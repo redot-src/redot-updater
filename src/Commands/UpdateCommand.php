@@ -3,6 +3,7 @@
 namespace Redot\Updater\Commands;
 
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Http;
 use ZipArchive;
 
 use function Laravel\Prompts\error;
@@ -61,7 +62,7 @@ class UpdateCommand extends BaseCommand
         }
 
         // Download dashboard
-        spin(fn () => File::put($zipPath, $this->createHttpClient()->get($download)->body()), 'Downloading dashboard...');
+        spin(fn () => File::put($zipPath, Http::get($download)->body()), 'Downloading dashboard...');
 
         // Unarchive dashboard
         spin(fn () => $this->unarchive($zipPath, $path), 'Unarchiving dashboard...');
