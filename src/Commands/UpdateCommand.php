@@ -3,7 +3,6 @@
 namespace Redot\Updater\Commands;
 
 use Illuminate\Support\Facades\File;
-use Illuminate\Support\Facades\Http;
 use ZipArchive;
 
 use function Laravel\Prompts\error;
@@ -38,7 +37,7 @@ class UpdateCommand extends BaseCommand
 
         // Get download endpoint
         $endpoint = "$this->endpoint/projects/$this->project/download?commit=HEAD";
-        $response = Http::withToken($this->token)->get($endpoint);
+        $response = $this->createHttpClient()->get($endpoint);
 
         // If download failed, show error and exit
         if ($response->failed()) {
@@ -52,7 +51,7 @@ class UpdateCommand extends BaseCommand
 
         // Get diff endpoint
         $endpoint = "$this->endpoint/projects/$this->project/diff";
-        $response = Http::withToken($this->token)->get($endpoint);
+        $response = $this->createHttpClient()->get($endpoint);
 
         // If diff failed, show error and exit
         if ($response->failed()) {
@@ -62,7 +61,7 @@ class UpdateCommand extends BaseCommand
         }
 
         // Download dashboard
-        spin(fn () => File::put($zipPath, Http::get($download)->body()), 'Downloading dashboard...');
+        spin(fn () => File::put($zipPath, $this->createHttpClient()->get($download)->body()), 'Downloading dashboard...');
 
         // Unarchive dashboard
         spin(fn () => $this->unarchive($zipPath, $path), 'Unarchiving dashboard...');

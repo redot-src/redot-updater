@@ -2,8 +2,6 @@
 
 namespace Redot\Updater\Commands;
 
-use Illuminate\Support\Facades\Http;
-
 use function Laravel\Prompts\error;
 use function Laravel\Prompts\info;
 
@@ -30,7 +28,7 @@ class LogoutCommand extends BaseCommand
             return;
         }
 
-        $response = Http::withToken($this->token)->delete("$this->endpoint/auth/logout");
+        $response = $this->createHttpClient()->delete("$this->endpoint/auth/logout");
 
         if ($response->failed()) {
             error($response->json('message'));

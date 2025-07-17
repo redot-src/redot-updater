@@ -2,8 +2,6 @@
 
 namespace Redot\Updater\Commands;
 
-use Illuminate\Support\Facades\Http;
-
 use function Laravel\Prompts\error;
 use function Laravel\Prompts\info;
 use function Laravel\Prompts\password;
@@ -36,7 +34,7 @@ class LoginCommand extends BaseCommand
         $email = text('Enter your email address', required: true, placeholder: 'john@doe.com', validate: fn ($value) => filter_var($value, FILTER_VALIDATE_EMAIL) ? null : 'Invalid email address');
         $password = password('Enter your password', required: true, placeholder: '********', validate: fn ($value) => strlen($value) >= 8 ? null : 'Password must be at least 8 characters long');
 
-        $response = Http::post("$this->endpoint/auth/login", [
+        $response = $this->createHttpClient()->post("$this->endpoint/auth/login", [
             'email' => $email,
             'password' => $password,
         ]);
@@ -47,11 +45,11 @@ class LoginCommand extends BaseCommand
             return;
         }
 
-        $token = $response->json('payload.token');
+        $this->token = $response->json('payload.token');
 
         info('Logged in successfully, fetching projects...');
 
-        $response = Http::withToken($token)->get("$this->endpoint/projects");
+        $response = $this->createHttpClient()->get("$this->endpoint/projects");
 
         if ($response->failed()) {
             error($response->json('message'));
@@ -68,10 +66,7 @@ class LoginCommand extends BaseCommand
         }
 
         $projects = $projects->mapWithKeys(fn ($project) => [$project['slug'] => $project['name']])->toArray();
-        $project = select('Select a project', $projects, required: true);
-
-        $this->token = $token;
-        $this->project = $project;
+        $this->project = select('Select a project', $projects, required: true);
 
         $this->saveCredentials();
 

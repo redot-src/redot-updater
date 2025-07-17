@@ -3,7 +3,9 @@
 namespace Redot\Updater\Commands;
 
 use Illuminate\Console\Command;
+use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Http;
 
 abstract class BaseCommand extends Command
 {
@@ -84,5 +86,19 @@ abstract class BaseCommand extends Command
     protected function hasCredentials(): bool
     {
         return ! empty($this->token) && ! empty($this->project);
+    }
+
+    /**
+     * Create a ready HTTP Client.
+     */
+    protected function createHttpClient(): PendingRequest
+    {
+        $client = Http::withoutVerifying();
+
+        if ($this->hasCredentials()) {
+            $client->withToken($this->token);
+        }
+
+        return $client;
     }
 }
